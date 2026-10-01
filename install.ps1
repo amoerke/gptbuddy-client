@@ -80,7 +80,11 @@ New-Item -ItemType Directory -Force -Path $installDirectory, $configDirectory, $
 try {
     Invoke-WebRequest -Uri $scriptUrl -OutFile $temporaryScript -UseBasicParsing
     Invoke-WebRequest -Uri $observerUrl -OutFile $temporaryObserver -UseBasicParsing
-    Invoke-WebRequest -Uri $watchUrl -OutFile $temporaryWatch -UseBasicParsing
+    try {
+        Invoke-WebRequest -Uri $watchUrl -OutFile $temporaryWatch -UseBasicParsing
+    } catch {
+        Write-Warning "The optional live monitor could not be downloaded and will be skipped."
+    }
     Invoke-WebRequest -Uri $defaultsUrl -OutFile $temporaryDefaults -UseBasicParsing
     & node --check $temporaryScript
     if ($LASTEXITCODE -ne 0) {
@@ -93,7 +97,9 @@ try {
     Get-Content -LiteralPath $temporaryDefaults -Raw | ConvertFrom-Json | Out-Null
     Move-Item -LiteralPath $temporaryScript -Destination $hookScript -Force
     Move-Item -LiteralPath $temporaryObserver -Destination $observerScript -Force
-    Move-Item -LiteralPath $temporaryWatch -Destination $watchScript -Force
+    if (Test-Path -LiteralPath $temporaryWatch) {
+        Move-Item -LiteralPath $temporaryWatch -Destination $watchScript -Force
+    }
     Move-Item -LiteralPath $temporaryDefaults -Destination $defaultsFile -Force
 }
 finally {
@@ -170,4 +176,6 @@ $json = $hookConfig | ConvertTo-Json -Depth 20
 Write-Host "gptbuddy was installed successfully."
 Write-Host "Restart Codex completely, then review and trust the new hook when prompted."
 Write-Host "Installed hook: $hookScript"
-Write-Host "Live subagent monitor: powershell -ExecutionPolicy Bypass -File $watchScript"
+if (Test-Path -LiteralPath $watchScript) {
+    Write-Host "Live subagent monitor: powershell -ExecutionPolicy Bypass -File $watchScript"
+}
