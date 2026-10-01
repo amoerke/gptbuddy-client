@@ -6,7 +6,26 @@ Der Router ist fehlertolerant: Fehlen Zugangsdaten, tritt ein Fehler auf oder is
 
 ## Für Teammitglieder: Installation per Doppelklick
 
-Voraussetzung ist lediglich eine aktuelle Node.js-LTS-Installation. Alle weiteren Schritte erledigt die Batch-Datei.
+### Einmalig: Node.js installieren
+
+gptbuddy benötigt Node.js. Wenn bei dir noch keine Node.js-Version installiert ist:
+
+1. Öffne die [offizielle Node.js-Download- und Installationsseite](https://nodejs.org/en/download).
+2. Wähle die als **LTS** gekennzeichnete Windows-Version aus (für die meisten Geräte: Windows Installer, `.msi`).
+3. Öffne die heruntergeladene Datei und übernimm die vorgeschlagenen Einstellungen im Installationsassistenten.
+4. Schließe anschließend offene PowerShell-Fenster und öffne bei Bedarf ein neues.
+
+Optionaler Test in PowerShell:
+
+```powershell
+node --version
+```
+
+Wenn eine Versionsnummer angezeigt wird, ist Node.js bereit. Die Node.js-Website bietet stets die aktuelle LTS-Version und die passenden Windows-Installer.
+
+### gptbuddy installieren
+
+Alle weiteren Schritte erledigt die Batch-Datei:
 
 1. Lade [install-gptbuddy.bat](https://raw.githubusercontent.com/amoerke/gptbuddy-client/main/install-gptbuddy.bat) herunter.
 2. Öffne die Datei per Doppelklick.
