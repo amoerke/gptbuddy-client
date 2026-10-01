@@ -22,6 +22,28 @@ Für Teammitglieder ist der Installer der vorgesehene Weg. Vor der Veröffentlic
 
 Der Installer lädt die aktuelle `route.js` und ihre Standardkonfiguration, legt sie unter `%LOCALAPPDATA%\gptbuddy\` ab, ergänzt die bestehende persönliche Codex-Hook-Konfiguration und speichert die benötigten Werte als Benutzer-Umgebungsvariablen. Der Hook erkennt diesen Installationsort selbstständig. Er lässt andere Hook-Einträge unverändert und kann gefahrlos erneut ausgeführt werden.
 
+## Laufende Subagenten beobachten
+
+Der Installer protokolliert nur tatsächlich gestartete und beendete Subagenten lokal – jeweils Zeit, Subagentenprofil, Modell und technische ID; keine Prompt-Inhalte. Um die Ereignisse live zu verfolgen, öffne ein separates PowerShell-Fenster:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\gptbuddy\watch-subagents.ps1"
+```
+
+Optional können Codex-Systemhinweise beim Start und Ende eines Subagenten eingeblendet werden. Sie erscheinen nicht als reguläre Chat-Nachricht, sondern als Hinweis in der Codex-Oberfläche. Aktivieren:
+
+```powershell
+[Environment]::SetEnvironmentVariable("GPTBUDDY_SHOW_SUBAGENT_NOTICES", "true", "User")
+```
+
+Deaktivieren:
+
+```powershell
+[Environment]::SetEnvironmentVariable("GPTBUDDY_SHOW_SUBAGENT_NOTICES", $null, "User")
+```
+
+Nach jeder Änderung Codex vollständig neu starten.
+
 Nach der Veröffentlichung lautet der Team-Befehl:
 
 ```powershell

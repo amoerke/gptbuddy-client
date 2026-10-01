@@ -1,1 +1,0 @@
-node "$env:LOCALAPPDATA\gptbuddy\route.js" --test "Erkläre kurz, was ein HTTP-Statuscode ist."

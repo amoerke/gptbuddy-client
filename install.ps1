@@ -34,13 +34,21 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
 }
 
 if ([string]::IsNullOrWhiteSpace($ClientId)) {
+    $ClientId = [Environment]::GetEnvironmentVariable("GPTBUDDY_CLIENT_ID", "User")
+}
+if ([string]::IsNullOrWhiteSpace($ClientId)) {
     $ClientId = Read-Host "gptbuddy Client-ID"
 }
 if ([string]::IsNullOrWhiteSpace($ClientId)) {
     throw "A Client-ID is required."
 }
 if ($null -eq $ClientSecret) {
-    $ClientSecret = Read-Host "gptbuddy Client-Secret" -AsSecureString
+    $savedSecret = [Environment]::GetEnvironmentVariable("GPTBUDDY_CLIENT_SECRET", "User")
+    if ([string]::IsNullOrWhiteSpace($savedSecret)) {
+        $ClientSecret = Read-Host "gptbuddy Client-Secret" -AsSecureString
+    } else {
+        $ClientSecret = ConvertTo-SecureString $savedSecret -AsPlainText -Force
+    }
 }
 
 $plainSecret = ConvertTo-PlainText $ClientSecret
@@ -51,26 +59,41 @@ if ([string]::IsNullOrWhiteSpace($plainSecret)) {
 $installDirectory = Join-Path $env:LOCALAPPDATA "gptbuddy"
 $hookScript = Join-Path $installDirectory "route.js"
 $temporaryScript = Join-Path $installDirectory "route.js.download.js"
+$observerScript = Join-Path $installDirectory "observe-subagent.js"
+$temporaryObserver = Join-Path $installDirectory "observe-subagent.download.js"
+$watchScript = Join-Path $installDirectory "watch-subagents.ps1"
+$temporaryWatch = Join-Path $installDirectory "watch-subagents.download.ps1"
 $configDirectory = Join-Path $installDirectory "config"
 $defaultsFile = Join-Path $configDirectory "defaults.json"
 $temporaryDefaults = Join-Path $configDirectory "defaults.json.download"
 $hooksDirectory = Join-Path $env:USERPROFILE ".codex"
 $hooksFile = Join-Path $hooksDirectory "hooks.json"
 $hookCommand = "node `"$hookScript`""
+$observerCommand = "node `"$observerScript`""
 $scriptUrl = "https://raw.githubusercontent.com/$Repository/$Ref/hooks/route.js"
+$observerUrl = "https://raw.githubusercontent.com/$Repository/$Ref/hooks/observe-subagent.js"
+$watchUrl = "https://raw.githubusercontent.com/$Repository/$Ref/watch-subagents.ps1"
 $defaultsUrl = "https://raw.githubusercontent.com/$Repository/$Ref/config/defaults.json"
 
 New-Item -ItemType Directory -Force -Path $installDirectory, $configDirectory, $hooksDirectory | Out-Null
 
 try {
     Invoke-WebRequest -Uri $scriptUrl -OutFile $temporaryScript -UseBasicParsing
+    Invoke-WebRequest -Uri $observerUrl -OutFile $temporaryObserver -UseBasicParsing
+    Invoke-WebRequest -Uri $watchUrl -OutFile $temporaryWatch -UseBasicParsing
     Invoke-WebRequest -Uri $defaultsUrl -OutFile $temporaryDefaults -UseBasicParsing
     & node --check $temporaryScript
     if ($LASTEXITCODE -ne 0) {
         throw "The downloaded hook script is not valid JavaScript."
     }
+    & node --check $temporaryObserver
+    if ($LASTEXITCODE -ne 0) {
+        throw "The downloaded subagent observer is not valid JavaScript."
+    }
     Get-Content -LiteralPath $temporaryDefaults -Raw | ConvertFrom-Json | Out-Null
     Move-Item -LiteralPath $temporaryScript -Destination $hookScript -Force
+    Move-Item -LiteralPath $temporaryObserver -Destination $observerScript -Force
+    Move-Item -LiteralPath $temporaryWatch -Destination $watchScript -Force
     Move-Item -LiteralPath $temporaryDefaults -Destination $defaultsFile -Force
 }
 finally {
@@ -79,6 +102,12 @@ finally {
     }
     if (Test-Path -LiteralPath $temporaryDefaults) {
         Remove-Item -LiteralPath $temporaryDefaults -Force
+    }
+    if (Test-Path -LiteralPath $temporaryObserver) {
+        Remove-Item -LiteralPath $temporaryObserver -Force
+    }
+    if (Test-Path -LiteralPath $temporaryWatch) {
+        Remove-Item -LiteralPath $temporaryWatch -Force
     }
 }
 
@@ -104,30 +133,36 @@ else {
 }
 
 Ensure-Property $hookConfig "hooks" ([pscustomobject]@{})
-Ensure-Property $hookConfig.hooks "UserPromptSubmit" @()
-
-$groups = @($hookConfig.hooks.UserPromptSubmit)
-$installed = $false
-foreach ($group in $groups) {
-    foreach ($handler in @($group.hooks)) {
-        if ($handler.commandWindows -eq $hookCommand -or $handler.command -eq $hookCommand) {
-            $installed = $true
+function Ensure-CommandHook([string]$EventName, [string]$Command, [string]$StatusMessage, [int]$Timeout, [bool]$Async, [int]$AdditionalContextLimit = -1) {
+    Ensure-Property $hookConfig.hooks $EventName @()
+    $groups = @($hookConfig.hooks.$EventName)
+    foreach ($group in $groups) {
+        foreach ($handler in @($group.hooks)) {
+            if ($handler.commandWindows -eq $Command -or $handler.command -eq $Command) {
+                $handler.timeout = $Timeout
+                Ensure-Property $handler "async" $Async
+                $handler.async = $Async
+                return
+            }
         }
     }
+
+    $handler = [ordered]@{
+        type = "command"
+        command = $Command
+        commandWindows = $Command
+        timeout = $Timeout
+        async = $Async
+    }
+    if ($StatusMessage) { $handler.statusMessage = $StatusMessage }
+    if ($AdditionalContextLimit -ge 0) { $handler.additionalContextLimit = $AdditionalContextLimit }
+    $groups += [pscustomobject]@{ hooks = @($handler) }
+    $hookConfig.hooks.$EventName = $groups
 }
 
-if (-not $installed) {
-    $handler = [pscustomobject]@{
-        type                   = "command"
-        command                = $hookCommand
-        commandWindows         = $hookCommand
-        timeout                = 6
-        statusMessage          = "gptbuddy prueft die Aufgabe"
-        additionalContextLimit = 300
-    }
-    $groups += [pscustomobject]@{ hooks = @($handler) }
-    $hookConfig.hooks.UserPromptSubmit = $groups
-}
+Ensure-CommandHook "UserPromptSubmit" $hookCommand "gptbuddy prueft die Aufgabe" 6 $false 300
+Ensure-CommandHook "SubagentStart" $observerCommand "" 3 $false
+Ensure-CommandHook "SubagentStop" $observerCommand "" 3 $false
 
 $json = $hookConfig | ConvertTo-Json -Depth 20
 [System.IO.File]::WriteAllText($hooksFile, "$json`r`n", (New-Object System.Text.UTF8Encoding($false)))
@@ -135,3 +170,4 @@ $json = $hookConfig | ConvertTo-Json -Depth 20
 Write-Host "gptbuddy was installed successfully."
 Write-Host "Restart Codex completely, then review and trust the new hook when prompted."
 Write-Host "Installed hook: $hookScript"
+Write-Host "Live subagent monitor: powershell -ExecutionPolicy Bypass -File $watchScript"
