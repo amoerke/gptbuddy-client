@@ -85,9 +85,11 @@ finally {
 [Environment]::SetEnvironmentVariable("GPTBUDDY_ROUTER_URL", $RouterUrl, "User")
 [Environment]::SetEnvironmentVariable("GPTBUDDY_CLIENT_ID", $ClientId, "User")
 [Environment]::SetEnvironmentVariable("GPTBUDDY_CLIENT_SECRET", $plainSecret, "User")
+[Environment]::SetEnvironmentVariable("GPTBUDDY_PLUGIN_ROOT", $installDirectory, "User")
 $env:GPTBUDDY_ROUTER_URL = $RouterUrl
 $env:GPTBUDDY_CLIENT_ID = $ClientId
 $env:GPTBUDDY_CLIENT_SECRET = $plainSecret
+$env:GPTBUDDY_PLUGIN_ROOT = $installDirectory
 
 if (Test-Path -LiteralPath $hooksFile) {
     try {
