@@ -1,0 +1,6 @@
+interface:
+  display_name: "GPTBuddy Subagent-Hinweise"
+  short_description: "Schaltet GPTBuddy-Agentenhinweise um"
+  default_prompt: "Use $gptbuddy-subagent-notices to enable GPTBuddy subagent notifications."
+policy:
+  allow_implicit_invocation: false
