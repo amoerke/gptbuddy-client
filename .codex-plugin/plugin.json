@@ -1,0 +1,7 @@
+{
+  "name": "gptbuddy",
+  "version": "0.1.0",
+  "description": "Conservative prompt routing for Codex: delegates only clear, isolated work to lower-cost subagents.",
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
+}

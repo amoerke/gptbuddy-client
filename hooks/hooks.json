@@ -1,0 +1,19 @@
+{
+  "description": "Route clear, self-contained prompts to a lower-cost Codex subagent.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/hooks/route.js\"",
+            "commandWindows": "node \"${PLUGIN_ROOT}\\hooks\\route.js\"",
+            "timeout": 6,
+            "statusMessage": "Choosing an efficient agent",
+            "additionalContextLimit": 300
+          }
+        ]
+      }
+    ]
+  }
+}

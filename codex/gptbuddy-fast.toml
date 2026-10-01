@@ -1,0 +1,3 @@
+# Copy beside the Codex config.toml that declares the `fast` agent role.
+model = "gpt-6-luna"
+model_reasoning_effort = "low"

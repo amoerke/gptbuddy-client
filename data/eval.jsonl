@@ -1,0 +1,12 @@
+{"prompt":"Explain what this TypeScript type means: type Point = { x: number; y: number }.","expected":"fast","notes":"Short explanation without repository context."}
+{"prompt":"Convert these three CSS hex colors to RGB: #112233, #ffffff, #000000.","expected":"fast","notes":"Mechanical, self-contained task."}
+{"prompt":"Write a concise release-note bullet for a fixed login timeout.","expected":"fast","notes":"Short isolated writing task."}
+{"prompt":"Find why the integration tests fail and implement the correct fix across the repository.","expected":"expert","notes":"Needs repository exploration and judgment."}
+{"prompt":"Review the current branch for security regressions before production deployment.","expected":"expert","notes":"High-impact, context-heavy review."}
+{"prompt":"Add a unit test for parseDate that accepts an ISO date string. The function is in src/date.ts.","expected":"standard","notes":"Bounded implementation with an explicit file."}
+{"prompt":"Summarize the differences between the two API responses pasted below.","expected":"fast","notes":"Self-contained analysis."}
+{"prompt":"Refactor the payment flow to be easier to maintain.","expected":"expert","notes":"Scope and success criteria are unclear."}
+{"prompt":"Create a migration plan from the old REST endpoint to /v2/orders based on this specification.","expected":"standard","notes":"Bounded planning task when specification is supplied."}
+{"prompt":"Investigate this production incident, decide whether to roll back, and prepare the remediation.","expected":"expert","notes":"High-impact operational work."}
+{"prompt":"Give me a regular expression that accepts German postal codes.","expected":"fast","notes":"Self-contained lookup-like task."}
+{"prompt":"Rename the private helper normalizeUserName to normalizeUsername and update its direct tests.","expected":"standard","notes":"Small, explicitly bounded code change."}

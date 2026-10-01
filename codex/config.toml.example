@@ -1,0 +1,15 @@
+# Merge this section into ~/.codex/config.toml or a trusted project's .codex/config.toml.
+# Replace model IDs only with models available to your Codex account.
+
+[agents]
+enabled = true
+default_subagent_model = "gpt-6-luna"
+default_subagent_reasoning_effort = "low"
+
+[agents.fast]
+description = "Use for clear, self-contained tasks selected by gptbuddy. Do not edit shared files without coordinating with the root agent."
+config_file = "gptbuddy-fast.toml"
+
+[agents.standard]
+description = "Use for bounded implementation or investigation selected by gptbuddy. Report concise evidence back to the root agent."
+config_file = "gptbuddy-standard.toml"

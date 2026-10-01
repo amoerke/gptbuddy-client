@@ -1,0 +1,12 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "gptbuddy",
+  "version": "0.1.0",
+  "description": "Conservative prompt routing for Codex: delegates only clear, isolated work to lower-cost subagents.",
+  "skills": "./skills/",
+  "extensions": {
+    "com.openai": {
+      "hooks": "./hooks/hooks.json"
+    }
+  }
+}

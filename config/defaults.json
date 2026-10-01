@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "request_timeout_seconds": 4,
+  "max_prompt_characters": 12000,
+  "minimum_prompt_characters": 12,
+  "delegate_confidence": 0.9,
+  "maximum_context_need": 0.45,
+  "log_decisions": false,
+  "roles": {
+    "fast": {
+      "description": "Short, self-contained analysis, lookup, explanation, or mechanical change.",
+      "minimum_confidence": 0.94
+    },
+    "standard": {
+      "description": "Bounded implementation or investigation with a small, explicit scope.",
+      "minimum_confidence": 0.9
+    },
+    "expert": {
+      "description": "Keep the task in the root session.",
+      "minimum_confidence": 1.0
+    }
+  }
+}
