@@ -3,7 +3,7 @@ param(
     [string]$ClientId,
     [SecureString]$ClientSecret,
     [string]$RouterUrl = "https://gptbuddy.dataminer.cloud/v1/route",
-    [string]$Repository = "amoerke/gptbuddy",
+    [string]$Repository = "amoerke/gptbuddy-client",
     [string]$Ref = "main"
 )
 
@@ -13,7 +13,8 @@ function ConvertTo-PlainText([SecureString]$Value) {
     $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($Value)
     try {
         return [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)
-    } finally {
+    }
+    finally {
         [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer)
     }
 }
@@ -71,7 +72,8 @@ try {
     Get-Content -LiteralPath $temporaryDefaults -Raw | ConvertFrom-Json | Out-Null
     Move-Item -LiteralPath $temporaryScript -Destination $hookScript -Force
     Move-Item -LiteralPath $temporaryDefaults -Destination $defaultsFile -Force
-} finally {
+}
+finally {
     if (Test-Path -LiteralPath $temporaryScript) {
         Remove-Item -LiteralPath $temporaryScript -Force
     }
@@ -90,10 +92,12 @@ $env:GPTBUDDY_CLIENT_SECRET = $plainSecret
 if (Test-Path -LiteralPath $hooksFile) {
     try {
         $hookConfig = Get-Content -LiteralPath $hooksFile -Raw | ConvertFrom-Json
-    } catch {
+    }
+    catch {
         throw "Existing hooks.json is not valid JSON. It was not changed."
     }
-} else {
+}
+else {
     $hookConfig = [pscustomobject]@{}
 }
 
@@ -112,11 +116,11 @@ foreach ($group in $groups) {
 
 if (-not $installed) {
     $handler = [pscustomobject]@{
-        type = "command"
-        command = $hookCommand
-        commandWindows = $hookCommand
-        timeout = 6
-        statusMessage = "gptbuddy prüft die Aufgabe"
+        type                   = "command"
+        command                = $hookCommand
+        commandWindows         = $hookCommand
+        timeout                = 6
+        statusMessage          = "gptbuddy prüft die Aufgabe"
         additionalContextLimit = 300
     }
     $groups += [pscustomobject]@{ hooks = @($handler) }
