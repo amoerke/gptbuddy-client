@@ -14,7 +14,7 @@ Der Router ist bewusst fehlertolerant ausgelegt: Ohne Geräte-Zugangsdaten, bei 
 
 ## Einfache Installation unter Windows
 
-Für Teammitglieder ist der Installer der vorgesehene Weg. Vor der Veröffentlichung muss das Repository unter `amoerke/gptbuddy` liegen oder der Standardwert `Repository` in `install.ps1` angepasst werden.
+Für Teammitglieder ist der Installer der vorgesehene Weg. Vor der Veröffentlichung muss das Repository unter `amoerke/gptbuddy-client` liegen oder der Standardwert `Repository` in `install.ps1` angepasst werden.
 
 1. Lade `install.ps1` aus dem GitHub-Repository herunter und führe es in PowerShell aus.
 2. Gib die dir zugeteilte gptbuddy-Client-ID und das zugehörige Client-Secret ein. Beide Werte werden nicht angezeigt und nicht in einer Repository-Datei gespeichert.
@@ -26,7 +26,7 @@ Nach der Veröffentlichung lautet der Team-Befehl:
 
 ```powershell
 $installer = Join-Path $env:TEMP "install-gptbuddy.ps1"
-Invoke-WebRequest https://raw.githubusercontent.com/amoerke/gptbuddy/main/install.ps1 -OutFile $installer
+Invoke-WebRequest https://raw.githubusercontent.com/amoerke/gptbuddy-client/main/install.ps1 -OutFile $installer
 & $installer
 ```
 
@@ -35,7 +35,7 @@ Alternativ lädt ein Teammitglied einfach `install-gptbuddy.bat` herunter und ö
 Beispiel für eine explizite Installation mit einem bestimmten Release-Tag:
 
 ```powershell
-.\install.ps1 -Repository amoerke/gptbuddy -Ref v0.1.0
+.\install.ps1 -Repository amoerke/gptbuddy-client -Ref v0.1.0
 ```
 
 ## Manuelle Installation in Codex

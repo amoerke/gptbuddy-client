@@ -50,7 +50,7 @@ if ([string]::IsNullOrWhiteSpace($plainSecret)) {
 
 $installDirectory = Join-Path $env:LOCALAPPDATA "gptbuddy"
 $hookScript = Join-Path $installDirectory "route.js"
-$temporaryScript = Join-Path $installDirectory "route.js.download"
+$temporaryScript = Join-Path $installDirectory "route.js.download.js"
 $configDirectory = Join-Path $installDirectory "config"
 $defaultsFile = Join-Path $configDirectory "defaults.json"
 $temporaryDefaults = Join-Path $configDirectory "defaults.json.download"
