@@ -122,7 +122,7 @@ if (-not $installed) {
         command                = $hookCommand
         commandWindows         = $hookCommand
         timeout                = 6
-        statusMessage          = "gptbuddy prüft die Aufgabe"
+        statusMessage          = "gptbuddy prueft die Aufgabe"
         additionalContextLimit = 300
     }
     $groups += [pscustomobject]@{ hooks = @($handler) }

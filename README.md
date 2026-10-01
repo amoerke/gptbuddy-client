@@ -20,7 +20,7 @@ Für Teammitglieder ist der Installer der vorgesehene Weg. Vor der Veröffentlic
 2. Gib die dir zugeteilte gptbuddy-Client-ID und das zugehörige Client-Secret ein. Beide Werte werden nicht angezeigt und nicht in einer Repository-Datei gespeichert.
 3. Starte Codex vollständig neu und bestätige den Hook bei der ersten Sicherheitsprüfung.
 
-Der Installer lädt die aktuelle `route.js` und ihre Standardkonfiguration, legt sie unter `%LOCALAPPDATA%\gptbuddy\` ab, ergänzt die bestehende persönliche Codex-Hook-Konfiguration und speichert die benötigten Werte als Benutzer-Umgebungsvariablen. Er lässt andere Hook-Einträge unverändert und kann gefahrlos erneut ausgeführt werden.
+Der Installer lädt die aktuelle `route.js` und ihre Standardkonfiguration, legt sie unter `%LOCALAPPDATA%\gptbuddy\` ab, ergänzt die bestehende persönliche Codex-Hook-Konfiguration und speichert die benötigten Werte als Benutzer-Umgebungsvariablen. Der Hook erkennt diesen Installationsort selbstständig. Er lässt andere Hook-Einträge unverändert und kann gefahrlos erneut ausgeführt werden.
 
 Nach der Veröffentlichung lautet der Team-Befehl:
 

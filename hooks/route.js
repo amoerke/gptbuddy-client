@@ -13,7 +13,9 @@ const https = require("https");
 const path = require("path");
 const { URL } = require("url");
 
-const pluginRoot = process.env.GPTBUDDY_PLUGIN_ROOT || process.env.PLUGIN_ROOT || path.resolve(__dirname, "..");
+const pluginRoot = process.env.GPTBUDDY_PLUGIN_ROOT
+  || process.env.PLUGIN_ROOT
+  || (fs.existsSync(path.join(__dirname, "config", "defaults.json")) ? __dirname : path.resolve(__dirname, ".."));
 const defaultsPath = path.join(pluginRoot, "config", "defaults.json");
 const dataDir = process.env.GPTBUDDY_DATA_DIR || process.env.PLUGIN_DATA || path.join(pluginRoot, ".gptbuddy-data");
 const configPath = path.join(dataDir, "config.json");
