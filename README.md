@@ -4,6 +4,8 @@
 
 Der Router ist fehlertolerant: Fehlen Zugangsdaten, tritt ein Fehler auf oder ist die Entscheidung unsicher, bleibt die Aufgabe in der Hauptsitzung.
 
+Bei einer Delegation gibt der Hook die Argumente für `collaboration.spawn_agent` ausdrücklich vor: `fast` verwendet `gpt-6-luna` mit `reasoning_effort: "low"`, `standard` verwendet `gpt-6.1-sol` mit `reasoning_effort: "medium"`. Beide starten mit `fork_turns: "none"` und einer vollständigen Aufgabenbeschreibung. Der Subagent-Name allein wählt kein Modell aus. Ist die explizite Modellwahl nicht möglich, bleibt die Aufgabe in der Hauptsitzung. Der Hook liefert eine Anweisung; beim End-to-End-Test muss deshalb auch das tatsächlich verwendete Subagent-Modell geprüft werden.
+
 ## Für Teammitglieder: Installation per Doppelklick
 
 ### Einmalig: Node.js installieren

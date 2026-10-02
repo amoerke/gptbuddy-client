@@ -156,8 +156,15 @@ function logDecision(prompt, route, config) {
 }
 
 function hookOutput(route) {
-  const additionalContext = route.delegate
-    ? `gptbuddy routing decision: delegate the entire task exactly once to the \`${route.target}\` subagent role. confidence=${route.confidence.toFixed(2)}; context_need=${route.needs_context.toFixed(2)}. This route is eligible specifically because the task is self-contained; use the root session only if no subagent is available.`
+  // task_name is only a label; collaboration.spawn_agent needs explicit overrides.
+  // Keep these mappings in sync with codex/gptbuddy-*.toml and the managed hook.
+  const profiles = {
+    fast: { model: "gpt-6-luna", reasoning_effort: "low" },
+    standard: { model: "gpt-6.1-sol", reasoning_effort: "medium" },
+  };
+  const profile = profiles[route.target];
+  const additionalContext = route.delegate && profile
+    ? `gptbuddy: Delegate this self-contained task once via collaboration.spawn_agent with ${JSON.stringify({ model: profile.model, reasoning_effort: profile.reasoning_effort, fork_turns: "none" })}. Supply the full task in message. task_name is only a label. If this model cannot be selected, keep_root.`
     : "gptbuddy routing decision: keep_root. No delegation recommendation.";
   return { hookSpecificOutput: { hookEventName: "UserPromptSubmit", additionalContext } };
 }
