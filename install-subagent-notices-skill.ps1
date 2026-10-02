@@ -14,8 +14,10 @@ $skillRoot = Join-Path $env:USERPROFILE ".codex\skills\gptbuddy-subagent-notices
 $metadataRoot = Join-Path $skillRoot "agents"
 $skillFile = Join-Path $skillRoot "SKILL.md"
 $metadataFile = Join-Path $metadataRoot "openai.yaml"
-$temporarySkill = Join-Path $env:TEMP "gptbuddy-subagent-notices.SKILL.download"
-$temporaryMetadata = Join-Path $env:TEMP "gptbuddy-subagent-notices.openai.download"
+# Keep temporary files inside the verified destination. Some Windows profile
+# configurations expose an obsolete 8.3 TEMP path, which can fail on cleanup.
+$temporarySkill = Join-Path $skillRoot ".SKILL.md.download"
+$temporaryMetadata = Join-Path $metadataRoot ".openai.yaml.download"
 $rawRoot = "https://raw.githubusercontent.com/$Repository/$Ref/skills/gptbuddy-subagent-notices"
 
 New-Item -ItemType Directory -Force -Path $skillRoot, $metadataRoot | Out-Null
@@ -34,10 +36,10 @@ try {
 }
 finally {
     if (Test-Path -LiteralPath $temporarySkill) {
-        Remove-Item -LiteralPath $temporarySkill -Force
+        Remove-Item -LiteralPath $temporarySkill -Force -ErrorAction SilentlyContinue
     }
     if (Test-Path -LiteralPath $temporaryMetadata) {
-        Remove-Item -LiteralPath $temporaryMetadata -Force
+        Remove-Item -LiteralPath $temporaryMetadata -Force -ErrorAction SilentlyContinue
     }
 }
 
