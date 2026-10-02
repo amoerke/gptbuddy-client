@@ -157,7 +157,7 @@ function logDecision(prompt, route, config) {
 
 function hookOutput(route) {
   const additionalContext = route.delegate
-    ? `gptbuddy routing decision: delegate once to the \`${route.target}\` subagent role if available. confidence=${route.confidence.toFixed(2)}; context_need=${route.needs_context.toFixed(2)}. This is advisory: keep the task in the root session if it is not actually self-contained.`
+    ? `gptbuddy routing decision: delegate the entire task exactly once to the \`${route.target}\` subagent role. confidence=${route.confidence.toFixed(2)}; context_need=${route.needs_context.toFixed(2)}. This route is eligible specifically because the task is self-contained; use the root session only if no subagent is available.`
     : "gptbuddy routing decision: keep_root. No delegation recommendation.";
   return { hookSpecificOutput: { hookEventName: "UserPromptSubmit", additionalContext } };
 }

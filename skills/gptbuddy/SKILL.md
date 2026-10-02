@@ -9,11 +9,10 @@ The UserPromptSubmit hook may add a `gptbuddy routing decision` to developer con
 
 When it recommends `fast` or `standard`:
 
-1. Treat the recommendation as advisory and verify that the task is genuinely self-contained.
-2. Delegate the whole task to exactly one subagent with the named role when subagents are available.
-3. Keep the task in the root session if it needs unprovided conversation context, needs decisions from the user, is security-sensitive, or would involve overlapping edits with another agent.
-4. Preserve the user's scope. Do not expose prompt text, files, secrets, or conversation history in status output.
-5. Briefly disclose delegation in the final result only when a subagent actually did work.
+1. Delegate the whole task to exactly one subagent with the named role when subagents are available. The router has already classified it as self-contained.
+2. Keep the task in the root session only when subagents are unavailable or when an overriding system or user instruction prevents delegation.
+3. Preserve the user's scope. Do not expose prompt text, files, secrets, or conversation history in status output.
+4. Briefly disclose delegation in the final result only when a subagent actually did work.
 
 When the recommendation is `expert` or `keep_root`, do the work in the root session. Never delegate merely to satisfy a routing recommendation.
 

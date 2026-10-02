@@ -1,6 +1,6 @@
 # gptbuddy
 
-`gptbuddy` ist ein konservativer Modell-Router für Codex. Bei jedem gesendeten Prompt ruft der lokale Hook den zentralen Router unter `https://gptbuddy.dataminer.cloud/v1/route` auf. Jev von TypeSafe AI klassifiziert die Aufgabe; die Entscheidung, ob Codex einen Subagenten verwendet, bleibt immer bei Codex.
+`gptbuddy` ist ein konservativer Modell-Router für Codex. Bei jedem gesendeten Prompt ruft der lokale Hook den zentralen Router unter `https://gptbuddy.dataminer.cloud/v1/route` auf. Jev von TypeSafe AI klassifiziert die Aufgabe. Für klar abgegrenzte, eigenständige Aufgaben weist der Hook Codex an, genau einmal an den günstigeren passenden Subagenten zu delegieren; komplexe oder kontextabhängige Aufgaben bleiben im Hauptmodell.
 
 Der Router ist fehlertolerant: Fehlen Zugangsdaten, tritt ein Fehler auf oder ist die Entscheidung unsicher, bleibt die Aufgabe in der Hauptsitzung.
 
